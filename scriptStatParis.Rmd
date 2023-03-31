@@ -1,0 +1,598 @@
+---
+title: "Les graffitis dans Paris"
+author: "Bébin Quentin, Charre Kyllian, Chazeau Vincent, Papeau Willem"
+---
+
+## Table des matières
+
+* Introduction
+* Méthodologie
+* Analyse
+* Conclusion
+* Source
+
+## Introduction
+
+Cette étude porte sur les signalisations d'anomalies dans les rues de Paris,
+de 2016 à 2021 inclus. Le jeu de données est tiré de l'application Dans Ma Rue,
+permettant aux citoyens de la ville de faire lesdites signalisations.  
+
+A la vue de ce jeu de données, incluant différents types d'anomalies dont les graffitis,
+nous nous sommes demandés comment ces derniers ont évolué au fil des ans et quels
+sont les possibles évènements et contextes qui ont fait évoluer le taux de signalement.  
+
+* Il faudra, durant l’entièreté de notre analyse, prendre en compte certaines nuances, la popularité de l'application "Dans Ma Rue". En effet, le nombre de signalisations qui grandit est fortement lié au fait que de plus en plus de gens entendent parler de cette application. L'augmentation du nombre de données ne s'explique donc pas seulement par une augmentation globale du nombre de graffitis dans Paris.
+
+Toute cette analyse devra répondre à la problématique suivante :
+
+<h3><bold> Comment expliquer les différences de dégradation entre les arrondissements de Paris ?  <bold/><h3/>
+
+## Méthodologie
+
+----> Positionnement du problème
+
+  * Avec le jeu de données, nous avions la possibilité d'analyser l'intégralité des déclarations. Le problème est que, par manque de temps, il aurait été compliqué de faire une analyse aussi poussée, nous avons donc décidé de nous concentrer sur les graffitis et autres tags. En effet, quand on pense dégradations, on pense souvent aux tags dans les rues, nous trouvions donc ce type d'anomalie assez intéressant pour en faire notre sujet d'analyse. Et justement, pour l'analyse, il s'agit de voir quels sont les zones les plus touchées de Paris et en expliquer la cause.
+
+----> Le téléchargement des fichiers & nettoyage des données:
+
+  * Comme précisé dans l'introduction, par soucis d'utiliser des jeux données relativement récents & complets, nous avons fait le choix de ne pas travailler sur l'ensemble des données à disposition. Nous avons préféré étudier les résultats de l'application de 2016 à 2021 inclus. En effet, les jeux de données précédents n'étant pas formaté de la même manière et comportant trop peu d'observations, nous avons décidé de ne pas perdre de temps sur ces derniers.  De plus, cet intervalle nous permet par exemple d'examiner les possibles conséquences de la crise du Covid sur le nombre de graffitis dans les rues de Paris.
+
+* Avant de commencer, nous avons programmé le code de sorte à ce qu'il soit capable de télécharger les fichiers de sorte à ce qu'il dézippe lui-même les fichiers téléchargés et supprime ces mêmes .zip pour avoir un dossier le plus propre possible. Ensuite, nous avons formaté le data-frame extrait du fichier 2021 pour que les colonnes collent avec celles des autres années avant des les assembler en un seul data-frame "anomalies". Ce dernier rassemble toutes les anomalies déclarées sur l'application, toutes années confondues, avec les informations détaillées sur ces dernières.
+Enfin, étant donné que la problématique tourne autour des graffitis et tags, nous avons filtré les anomalies pour récupérer celles qui nous intéressent dans un data-frame appelé "graffitis".
+
+----> Les choix de représentations:
+
+  * Pour notre analyse, nous avions besoin de représenter les données temporellement, mais aussi et surtout spatialement. Ainsi, nous avons fait le choix de faire usage des graphiques à bar, qui donnent une bonne visibilité des quantités de déclaration par an, mais aussi par arrondissement, notamment si on les associe à une palette de couleurs. 
+  
+
+  
+* Pour ce qui est du graphe sur les anomalies & graffitis par an, nous avons juste choisi deux couleurs contrasté, le bleu et le rouge. Le rouge a été utilisé pour les graffitis car cette couleur attire fortement les yeux, et c'est ce sur quoi on souhaite mettre à l'accent.
+Concernant le graphe sur les graffitis par arrondissement, tout comme  pour la carte, nous avons fait le choix d'une palette évoluant selon la quantité de déclaration. Le vert concerne bien évidemment les zones peu taguées, le rouge les zones où la situation est la plus alarmante. Pour les valeurs intermédiaires, on retrouve du jaune assez clair, qui se fait moins remarquer sur le fond gris clair du graphe. Cela permet de mettre l'accent sur les valeurs extrêmes pour mieux les distinguer, étant donné que le rouge et le vert sont plutôt sombres et vifs sur ces valeurs. 
+
+* Aussi, pour la représentation spatiale, l'usage d'une heatmap avec Leaftlet s'est présenté comme indispensable. En effet, cela permet de représenter la densité des signalements par zone, et ainsi analyser efficacement les zones et déterminer les plus touchées, que ce soit les arrondissements où les zones plus spécifiques comme les gares où les places, etc...
+
+* Le choix des couleurs pour chaque valeur de densité dépend de l'objectif de la visualisation et de l'effet recherché. Ici, nous avons opté pour des couleurs qui évoquent communément un degré d'intensité ou de danger croissant, telles que le bleu pour une intensité faible, l'orange pour une intensité modérée et le rouge pour une intensité majeure. Ces choix ont été faits en prenant en compte la perception générale que peuvent avoir les utilisateurs de ces couleurs.
+
+* Pour chaque catégorie que l'on va organiser comme allant de faible à moyen jusqu'à grand pour respectivement Négligeable/Faible, Modéré/Considérable et Important/Majeur, on a choisi notre raisonnement a été d'avoir une transition plutôt douce, mais démarquée pour les catégories Négligeable, Modéré et Important, qui sont plus claires pour bien faire apparaître les contours de chaque niveau d'intensité.
+* On a donc détaillé chaque couleur des duos de catégories, le bleu, l'orange et le rouge en un dégradé de deux couleurs nuancé (par exemple le bleu décomposé en bleu ciel et bleu foncé, le orange en jaune clair et orange clair et le rouge en orange foncé et rouge). Cela nous permet de garder un équilibre entre chaque intensité.
+
+## Analyse
+
+Pour cette analyse, il nous faut voir quelles zones sont plus ou moins touchées que la moyenne. En général, celles où les valeurs
+sont les plus extrêmes comportent des informations supplémentaires selon la période et le contexte politique et/ou économie-social.  
+
+
+
+Pour se faire, nous avons visualisé via un graphique le nombre de signalisations
+concernant les graffitis et le nombre d'anomalies total au fil du temps.
+
+Le graphique en barres est l'outil de représentation graphique principalement utilisée dans notre analyse.
+
+![](https://zupimages.net/up/23/13/8kpa.png)
+
+
+
+ + Sur le graphique on peut observer une augmentation continue des graffitis déclarés, au fil des années. Cette augmentation suit approximativement celle des anomalies.
+Par ailleurs, les chiffres ont fortement augmenté à partir de 2019. Là où l'augmentation générale est due à la popularisation de l'application, plus qu'une dégradation de plus en plus forte de Paris, on remarque une augmentation drastique des anomalies dans leur ensemble, on peut faire la conjecture avec la crise des gilets jaune en 2019 étant potentiellement à l'origine de cette augmentation. En revanche, peu de changements sont à signaler du côté des graffitis, les manifestations et autres ayant plutôt causé des dégradations matérielles (ex: radars brûlés...).
+
+ + Ensuite, une autre forte augmentation est à remarquer, que ce soit pour les tags ou les anomalies générales: 2020 à 2021. Hypothèse: durant la crise du Covid, la population ayant été confinée, les citoyens de Paris ont pu passer plus de temps sur leur téléphone et ainsi cherché de nouvelles occupation. Cela a pu contribuer à une forte augmentation de la popularité de l'application, dont les utilisateurs sont de plus en plus nombreux et ont pu exploiter le plein potentiel de l'application à la levée des restrictions. 
+De plus, les restrictions aillant créé des tensions et sachant que les tags sont utilisés comme des moyens d'expression, les opposants ont pu en faire usage pour signaler leur mécontentement vis-à-vis des mesures anti-Covid. De même les manifestations contre ces restrictions ont donné lieu à des dégradations supplémentaires, le tout ayant été sûrement signalé sur l'application.
+
+![](https://zupimages.net/up/23/13/ojf9.png)
+
+* Pour ce qui est des graphiques nous montrant le nombre de graffitis par arrondissement sur plusieurs années, on peut y voir des tendances qui se dégagent avec 2 ou 3 arrondissements qui ont des résultats plus hauts que les autres. A part en 2019, où l'on a pu voir une bonne répartition des valeurs, notamment à cause des manifestations et marches qui ont eu lieu dans l'entièreté de Paris.
+Les zones avec le plus grand nombre de graffitis répertoriés sont des zones avec une haute densité de population, un revenu moyen plus faible que d'autres arrondissements, et avec peu de monuments (Donc zones potentiellement moins touristiques).
+
+En somme, l'arrondissement le plus touché par les graffitis est le 11ème, suivi de près par le 18ème, puis le 10ème. 
+A contrario, les moins touchés sont le 7ème, le 8ème et le 16ème.
+
+Plus de détails sont disponibles pour chaque année, en dessous des graphes de répartition dans l'application Shiny R.
+
+Pour la dernière partie de cette analyse, nous avons choisi de créer une carte de densité de Paris
+
+
+
+----> HeatMap
+
+
+
+
+Voici la carte de densité du canton de Paris représentant la présence de graffitis (interactive via Shiny R)
+
+
+![](https://zupimages.net/up/23/13/yt6o.png)
+
+
+
+---->
+ Explication de la légende
+
+
+Avant d'analyser en profondeur la carte, il est nécessaire d'expliciter nos choix concernant la légende :
+
+Le choix des couleurs pour chaque valeur de densité dépend de l'objectif de la visualisation et de l'effet recherché. Ici, notre choix a été d'utiliser des couleurs allant du bleu clair pour les densités les plus faibles au rouge foncé pour les densités les plus élevées.
+
+On a opté pour des couleurs qui évoquent communément un degré d'intensité ou de danger croissant, telles que le bleu pour une intensité faible, l'orange pour une intensité modérée et le rouge pour une intensité majeure. Ces choix ont été faits en prenant en compte la perception générale que peuvent avoir les utilisateurs de ces couleurs.
+
+Notre résonnement pour en arrivant au choix de ces six couleurs aura été de vouloir augmenter la précision de la carte en passant donc de 3 couleurs (bleu/orange/rouge) au 6 ci dessus
+  
+Pour que cela reste cohérent on a donc détaillé chaque couleur principales, le bleu, orange et rouge en un dégradé de deux couleurs nuancé (par exemple le bleu décomposé en bleu ciel et bleu foncé, le orange en jaune clair et orange clair et le rouge en orange foncé et rouge). Cela nous permet de garder un équilibre entre chaque intensités
+
+Par ailleurs, la carte interactive utilisé n'affichant pas par défaut le nom de chaque arrondissement et pour faciliter sa lecture, nous avons choisi de rajouter des marqueurs au centre de chaque arrondissement afin qu'avec un simple clic, l'utilisateur puisse mettre un numéro sur l'arrondissement qu'il regarde. 
+
+----> Les points notables sur la carte  
+
+
+* Dans un premier temps, sans zoomer, on remarque nettement une certaine tendance. Les zones les plus touchés par les graffitis dans Paris se concentre dans la partie centre-est/centre-nord-est de Paris. Avec au contraire, des zones beaucoup moins touchées tel que la partie Ouest du 16ème et Est du 12ème. On remarque que la couronne de Paris, soit le périphérique, a une intensité faible voir négligeable.
+On observe également deux zones modéré au centre du 14ème et du 15ème arrondissement 
+                          
++ La première interprétation que l'on peut en tirer est que les zones les moins touchés sont les zones vertes, tel qu'une partie du 12eme et du 16eme. En effet, les graffitis sont des marques aillant pour but d'êtres visible au plus de monde possible, elles n'ont que très peu de sens d'être sur les arbres et feuilles, environnement qui change avec le temps perdant donc en "rendement". Par "rendement" on entend qu'un graffitis se détériore avec le temps. Un mur ne se détériore que très lentement avec le temps, contrairement à l'environnement qui change constamment au rythme des saisons. Les graffeurs ont donc un meilleur "rendement", ils sont susceptible de toucher plus de monde dans des lieux à forte concentration et sur des matières peu sujettes à des détériorations lié au temps et saisons.
+Notre explication de la faible signalisation de tags aux abords du périphérique s'explique par le fait que les conducteurs sont concentrés sur la route et ne peuvent pas utiliser leur téléphone pour signaler la présence de graffitis.
+
+
+![](https://zupimages.net/up/23/13/hsee.png)
+![](https://zupimages.net/up/23/13/ap11.png)
+
+
+Zoomer une première fois nous permet d'avoir plus de précision quant à la signalisation de certains arrondissement/rue.
+
+Nous allons expliquer la présence d'une plus grande densité de graffitis dans ces différentes zones : Belleville, Vaugirard, Alesia, La Chapelle (Stalingrad)
+
+* (20ème Arrondissement) Belleville : La culture street-art est très présente dans le quartier, avec de nombreux 'spots' de graffitis, devenus incontournables : Par exemple, le Belvédère de Belleville, ce lieu étant une zone officielle ou les graffitis sont vu comme de l'art, il n'y a que peu voir pas de signalisations. 
+En dehors de cette zone, les graffitis sont vu comme des dégradations et un arceau de signalisation se dessine autour du belvédère de Bellevile.
+
+* (14 et 15 ème Arrondissement)Vaugirard, Alesia : sont des grosses stations de métro et de ce fait nous nous attendions à ce qu'il soit particulièrement touché par les tags et les graffitis. Cependant on se rend compte que ce n'est pas vraiment le cas. En effet bien qu'ils représentent les points les plus chaud de leurs arrondissements respectifs le nombre de signalisations reste faible voir négligeable. Pour expliquer cela on peut émettre l'hypothèse que les gens sont tellement habitués aux graffitis des métros et ne prennent même plus la peine de les signaler.
+
+* (18ème Arrondissement)La Chapelle (Stalingrad) : véritable archive du hip-hop le terrain de Stalingrad est connu pour être très lié à l'histoire du rap et donc de la culture street-art en France.
+Le niveau de signalisation dans cette zone est modéré/considérable ce qui reste surprenant quand on sait qu'elle regorge de graffitis. On peut donc associer le faible taux de signalisations à l’accommodation des tags à ce paysage urbain. Ajoutons à cela la mauvaise réputation de ce quartier qui ne donne pas forcement envie de faire la démarche de sortir son téléphone.
+
+
+
+----> Place de la République - Gare du Nord et Gard de l'Est
+
+
+
+![](https://zupimages.net/up/23/13/ji63.png)
+
+
+* Sur cette image-ci on peut voir les grands boulevards comme la Place de la République qui est un important carrefour des transports parisiens sans oublier lieux de rencontre de beaucoup de manifestations et mouvement du genre. Soit un lieu extrêmement fréquenté.
+
+* A contrario, on observe que les gares (Gare du Nord et Gare de l'Est) sont des lieux qui ne sont que très peu signalés.
+Pourtant, c'est un lieu pouvant accorder beaucoup de visibiliser au graffeur ajoutant à cela le fait que les trains sont souvent tagués, cela peut paraître étonnant au premier abord, mais cela a tout sont sens puisque les gares ne sont en général qu'un lieu de passage des visiteurs. Les visiteurs, comme leur définition l'exprime, ne sont que de passage dans la ville de Paris, il y a de forte chance qu'il ne possède et ne connaisse pas l'application, expliquant donc le creux de signalisation dans ces endroits.
+Seconde hypothèse : les gares sont le premier aperçu qu'on les visiteurs de la ville, la mairie participe peut être donc activement à leur préservation, et les cameras de surveillances peuvent aussi dissuader les graffeurs et tagueurs
+
+
+
+----> Montmartre 
+
+
+
+![](https://zupimages.net/up/23/13/lh8j.png)
+
+* Parmi les zones les plus touchées par les tags et graffitis, on retrouve Montmartre, une zone marquée par l'art. Plusieurs peintres connus se sont un jour installés dans ce village de Paris. Aujourd'hui on y retrouve encore plusieurs galeries d'arts, et des dessinateurs de rue. Il est donc logique d'y retrouver des tags et graffitis, qui sont aujourd'hui reconnus comme un style d'art à part entière.
+
+
+## Conclusion
+
+En conclusion, on distingue 3 caractéristiques parmi les zones les moins touchées par les graffitis, soit les zones, de faible densité de population, dont la population est particulièrement aisée et touristiques (présences de nombreux monuments)
+
+
+* La faible présence de graffitis dans les zones riches peut s'expliquer par le statut des habitants de ces zones là. Les tags et graffitis sont souvent associés à une population moins riche qui les utilise comme des moyens de s'exprimer/se révolter et ainsi véhiculer un message par exemple le tag ACAB (all cops are bastard) est omniprésent dans les quartiers mal famés des états unis.
+Les zones touristiques quant à elles sont beaucoup plus entretenues puisqu'elles sont le visage de la France à l'international. On imagine assez facilement qu'un graffitis sur l'arc de Triomphe sera nettoyer plus rapidement qu'un N ième graffitis Gare du Nord. De plus par définition les zones touristiques sont fréquentées par des touristes qui n'ont pas l'application DansMaRue.
+Ces facteurs sont bien évidement liés car les zones touristiques sont prisées et y vivre nécessite beaucoup d'argent (peu d'habitants et train de vie chère).
+
+* Mais peut-on réellement répondre à la question : "Comment expliquer les différences de dégradations entre les arrondissements de Paris ?" avec ces éléments ?
+Il est clair que les résultats de notre études vont dans le sens de nos hypothèses, puisque les zones riches sont globalement épargnées par les tags. 
+Cependant il faut nuancer ces résultats. Par exemple même si nous n'avons pas accès à cette information, peu d'utilisateurs de l'application sont des jeunes (vingtenaire, adolescents) est certaines zones/quartiers fréquentées par ses derniers sont donc pas/peu couvertes. Les utilisateurs sont également plus enclin à signaler les zones selon un critère subjectif : un tag dans une zone pauvre et insalubre passera inaperçu contrairement à un tag dans un quartier riche.
+
+Nous conclurons donc qu'il y a bien une tendance permettant d'expliquer les différences de dégradations entre les arrondissements de Paris. Mais que le jeu de données n'étant pas assez "objectif" il est difficile de faire entièrement confiance en cette analyse.
+
+## Sources
+
+- https://indicateurs-parisdata.opendatasoft.com/explore/dataset/dans-ma-rue-anomalies-signalees/
+- https://www.paris.fr/pages/signaleurs-dans-ma-rue-agir-sur-l-espace-public-6682
+- https://opendata.paris.fr/page/lademarche/
+- https://www.evous.fr/Operation-proprete-dans-le-quartier-Ternaux-Jacquard,1158502.html
+- https://les-porteurs-parisiens.fr/blog/top-4-des-arrondissements-de-paris-ou-demenager/
+- https://www.google.com/maps
+- https://www.parisinfo.com/decouvrir-paris/balades-a-paris/montmartre-village-a-paris
+- https://www.lefigaro.fr/actualite-france/stalingrad-a-paris-dans-l-enfer-d-un-quartier-submerge-par-le-crack-20210516
+-
+ https://monpetit20e.com/street-art-ne-manquez-pas-la-rue-denoyez-a-belleville/
+- https://www.parisinfo.com/decouvrir-paris/balades-a-paris/montmartre-village-a-paris 
+
+```{r echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+
+### INSTALLATION DES PACKAGES & CHARGEMENT DES LIBRAIRIES
+
+# Liste des noms des packages à installer et charger
+package_names <- c("shiny", "leaflet", "leaflet.extras", "dplyr", "sf", "ggplot2", "data.table", "curl")
+
+# Boucle pour installer et charger chaque package
+for (package_name in package_names) {
+  if (!require(package_name, character.only = TRUE)) {
+    install.packages(package_name)
+    library(package_name, character.only = TRUE)
+  }
+}
+
+
+### TELECHARGEMENT DES FICHIERS 
+
+# Tous les fichiers de 2016 à 2021
+for (annee in 2016:2020) {
+  file <- paste0("DMR_", annee, ".csv.zip")
+  url <- paste0("https://parisdata.opendatasoft.com/api/datasets/1.0/dans-ma-rue-historique-anomalies-signalees/attachments/dmr_", annee, "_csv_zip/")
+  
+  if (!file.exists(paste0("DMR_", annee, ".csv"))) {
+    curl_download(url, file, quiet = FALSE)
+  }
+  
+  unzip(file)
+  
+  file.remove(file)
+}
+
+# Fichier de 2021 (lien à part)
+if (!file.exists("DMR_2021.csv")) {
+  curl_download("https://parisdata.opendatasoft.com/api/datasets/1.0/dans-ma-rue-historique-anomalies-signalees/attachments/dmr_2021_csv_zip/", "DMR_2021.csv.zip")
+}
+
+unzip("DMR_2021.csv.zip")
+file.remove("DMR_2021.csv.zip")
+
+# Fichier geojson Paris
+if (!file.exists("communes-ile-de-france.geojson")) {
+    download.file("https://france-geojson.gregoiredavid.fr/repo/regions/ile-de-france/communes-ile-de-france.geojson", destfile = "communes-ile-de-france.geojson")
+  }
+
+
+### INITIALISATION DATA-FRAMES
+
+# Initialisation, pré-nettoyage
+rm(anomalies)
+rm(graffitis)
+
+# On récupère les données de 2021 en dataframe
+temp21 <- read.csv("./DMR_2021.csv", sep=";")
+# On retire les colomnes ETAT et DATEETAT (ces colomnes ne sont pas présentes
+# dans les autres fichiers)
+temp21 <- subset(temp21, select = -c(ETAT, DATEETAT))
+# On renomme la colomnes OID_ en OBJECTID pour éviter tout conflit
+colnames(temp21)[1] ="OBJECTID"
+
+# On récupères les fichiers des autres années et on les bind dans un seul dataframe
+files <- list.files(path = "./", pattern = "*.csv$")
+files <- files[!grepl("^DMR_2021.csv$", files)]
+temp <- lapply(files, fread, sep=";")
+anomalies <- rbindlist(temp)
+
+# On retire les colomnes DATEDECL des deux dataframes, là encore pour éviter un conflit
+# au niveau des attributs, d'autres columns temporelles nous intéressent.
+temp21 <- subset(temp21, select = -c(DATEDECL))
+anomalies <- subset(anomalies, select = -c(DATEDECL))
+
+# On bind ce dernier dataframe avec celui de 2021
+anomalies <- rbind(anomalies, temp21)
+
+# On arrondi certaines colomnes (correction de valeurs...)
+anomalies$CODE_POSTAL = as.numeric(as.character(anomalies$CODE_POSTAL))
+
+# Arrondir les valeurs et les convertir en entiers sous forme de chaînes de caractères
+anomalies$ARRONDISSEMENT <- sub(",.*", "", anomalies$ARRONDISSEMENT)
+
+# On nettoie en supprimant les variables et autres valeurs temporaires
+rm(temp)
+rm(temp21)
+rm(files)
+
+# Création de la variable graffitis, qui est un tri de anomalies
+rm(graffitis)
+
+graffitis <- anomalies %>% filter(TYPE == 'Graffitis, tags, affiches et autocollants')
+
+# Enlever tout ce qu'il y a après la virgule dans la colonne
+graffitis$ARRONDISSEMENT <- sub("\\..*$", "", graffitis$ARRONDISSEMENT)
+
+### HEATMAP
+
+# Initialisation variables & valeurs // heatmap des anomalies sur Paris
+rm(data)
+rm(my_colors)
+rm(my_colors_html)
+
+data <- graffitis
+
+# Convertir les coordonnées en nombre
+data$X <- sub(",", ".", data$X)
+data$Y <- sub(",", ".", data$Y)
+data$X <- as.numeric(data$X)
+data$Y <- as.numeric(data$Y)
+
+#Définir une palette de couleurs personnalisée avec des codes de couleurs HTML
+my_colors_html <- c("#4d88ff","#0000FF", "#FFFFB2", "#FF9966", "#FF3300", "#CC0000")
+my_colors <- apply(col2rgb(my_colors_html), 2, function(rgb) rgb(rgb[1], rgb[2], rgb[3], maxColorValue = 255))
+rm(my_colors_html)
+
+# Lire le fichier GeoJSON
+communes <- st_read("communes-ile-de-france.geojson")
+
+#Garder les arrondissements allant du premier au 20 ème
+communes_paris <- subset(communes, grepl("^Paris", nom, ignore.case = TRUE))
+#Creer colonne numéro de l'arrondissement
+communes_paris$numero <- gsub("Paris ([0-9]+)e.*", "\\1", communes_paris$nom)
+
+#Creer colonne centroeid avec la coordonnée où afficher le numéro de l'arrondissement
+communes_paris$centroid <- st_centroid(communes_paris$geometry)
+
+
+# Convertir les données en format sf
+communes_sf <- st_as_sf(communes_paris)
+
+# On nettoie en supprimant les variables et autres valeurs temporaires
+rm(communes_paris)
+rm(communes)
+
+### GRAPHE ANOMALIES & GRAFFITIS/AN
+
+# Initialisation variables, pré-nettoyage
+rm(plotNB)
+rm(plotNBAn)
+
+# Ici, plotNB -> nb. de graffitis, plotNBAn -> nb/ d'anomalies, le tout trié par an
+plotNB <- (graffitis %>% group_by(graffitis$ANNEEDECL)) %>% summarise(countNB = n())
+plotNBAn <- (anomalies %>% group_by(anomalies$ANNEEDECL)) %>% summarise(countNBAn = n())
+
+
+### GRAPHES GRAFFITIS/ARRONDISSEMENT
+
+# Initialisation variables, pré-nettoyage
+rm(plotCP)
+rm(plotCP2021)
+rm(plotCP2020)
+rm(plotCP2019)
+rm(plotCP2018)
+rm(plotCP2017)
+rm(plotCP2016)
+rm(HighPlot)
+rm(MidPlot)
+rm(LowPlot)
+
+# Création des plots
+plotCP2021 <- graffitis %>%
+              # filtrer les données pour garder seulement les graffitis déclarés en 2021
+              filter(ANNEEDECL == '2021') %>%
+              # convertir la variable ARRONDISSEMENT de caractères en entiers
+              mutate(ARRONDISSEMENT = as.integer(ARRONDISSEMENT)) %>%
+              # grouper les données par ARRONDISSEMENT
+              group_by(ARRONDISSEMENT) %>%
+              # calculer le nombre de graffitis par ARRONDISSEMENT
+              summarise(countCP21 = n())
+plotCP2020 <- graffitis %>%
+              filter(ANNEEDECL == '2020') %>%
+              mutate(ARRONDISSEMENT = as.integer(ARRONDISSEMENT)) %>%
+              group_by(ARRONDISSEMENT) %>%
+              summarise(countCP20 = n())
+plotCP2019 <- graffitis %>%
+              filter(ANNEEDECL == '2019') %>%
+              mutate(ARRONDISSEMENT = as.integer(ARRONDISSEMENT)) %>%
+              group_by(ARRONDISSEMENT) %>%
+              summarise(countCP19 = n())
+plotCP2018 <- graffitis %>%
+              filter(ANNEEDECL == '2018') %>%
+              mutate(ARRONDISSEMENT = as.integer(ARRONDISSEMENT)) %>%
+              group_by(ARRONDISSEMENT) %>%
+              summarise(countCP18 = n())
+plotCP2017 <- graffitis %>%
+              filter(ANNEEDECL == '2017') %>%
+              mutate(ARRONDISSEMENT = as.integer(ARRONDISSEMENT)) %>%
+              group_by(ARRONDISSEMENT) %>%
+              summarise(countCP17 = n())
+plotCP2016 <- graffitis %>%
+              filter(ANNEEDECL == '2016') %>%
+              mutate(ARRONDISSEMENT = as.integer(ARRONDISSEMENT)) %>%
+              group_by(ARRONDISSEMENT) %>%
+              summarise(countCP16 = n())
+plotCP <- graffitis %>%
+               mutate(ARRONDISSEMENT = as.integer(ARRONDISSEMENT)) %>%
+              group_by(ARRONDISSEMENT) %>%
+              summarise(countCP = n())
+
+
+# Palette de couleurs pour les graphes
+
+LowPlot <- "#009900"
+MidPlot <- "#FFFF00"
+HighPlot <- "#CC4444"
+
+### INTERFACES SHINY
+
+# Pré-nettoyage
+rm(subUi)
+rm(ui)
+
+# Création d'une sous interface Shiny pour les graphes de graffitis/arrondissement
+subUi <- fluidPage(
+  # Sélecteur pour choisir la variable à afficher
+  selectInput(inputId = "data_type", label = "Choisir la donnée à afficher", choices = c("All" = "plotCP", "2021" = "plotCP2021", "2020" = "plotCP2020", "2019" = "plotCP2019", "2018" = "plotCP2018", "2017" = "plotCP2017", "2016" = "plotCP2016")),
+
+  # Graphique
+  plotOutput(outputId = "graph")
+)
+
+# Création de l'application Shiny avec son menu
+ui <- navbarPage("Anomalies",
+
+                 # Premier onglet
+                 tabPanel("Graffitis & anomalies par ans",
+                          plotOutput("plot1"),
+                          verbatimTextOutput("text1")
+                 ),
+
+                 # Deuxième onglet
+                 tabPanel("Répartition par année",
+                  subUi
+                 ),
+                 # Troisième onglet pour la carte
+                  tabPanel("Carte interactive",
+                  leafletOutput("map")
+                 
+                 
+                 )
+)
+
+
+
+### SERVEUR SHINY
+
+# Exécution de l'application avec les différents graphes et la map en output
+server <- function(input, output) {
+  
+  # Troisième onglet: heatmap
+  output$map <- renderLeaflet({
+    leaflet(data) %>%
+    # Ajouter les tuiles de fond de carte
+    addTiles() %>%
+    # Ajouter la heatmap
+    addHeatmap(~X, ~Y, max = 4000, blur = 40, radius = 20, gradient = my_colors) %>%
+    # Ajouter les limites des communes de Paris
+    addPolygons(data = communes_sf, fill = NA, color = "grey", weight = 2) %>%
+    # Définir la vue initiale sur Paris
+    setView(lng = 2.3522, lat = 48.8566, zoom = 12) %>%
+    # Définir un style pour les tuiles
+    addProviderTiles(providers$CartoDB.Positron) %>%
+    addMarkers(data = communes_sf,
+              lng = ~ st_coordinates(centroid)[,1],
+              lat = ~ st_coordinates(centroid)[,2],
+              popup = ~ paste(nom)) %>%
+    # Ajouter la légende
+    addLegend("bottomright",
+              title = "Title",
+              colors = my_colors,
+              labels = c("Négligeable", "Faible", "Modéré",  "Considérable", "Important", "Majeur"))
+  })
+  
+  # Premier onglet: graphe anomalies & graffitis/an
+  output$plot1 <- renderPlot({
+    ggplot() +
+    # Barre de données pour les anomalies
+    geom_bar(data = plotNBAn, aes(x = `anomalies$ANNEEDECL`, y = countNBAn, fill = "Anomalies"), stat = "identity") +
+    # Barre de données pour les graffitis
+    geom_bar(data = plotNB, aes(x = `graffitis$ANNEEDECL`, y = countNB, fill = "Graffitis"), stat = "identity") +
+    # Pourcentage de graffitis par rapport au total
+    geom_text(data = plotNB, aes(x = `graffitis$ANNEEDECL`, y = countNB/2, label = paste0(round(countNB/(plotNBAn$countNBAn+countNB)*100),"%")), color = "white") +
+    # Mise en forme du graphe
+    ggtitle("Nb. d'anomalies et graffitis au fil des ans") +
+    xlab("Années") +
+    ylab("Nb. d'anomalies & graffitis") +
+    scale_fill_manual(values=c("#003049","#d62828"), name="Légende")
+  })
+  
+ 
+  
+   # Dexième onglet:graffitis par arrondissement par ans
+  output$graph <- renderPlot({
+    # Expression conditionnelle pour choisir la variable à afficher
+    if(input$data_type == "plotCP") {
+      # Plot du graphe avec en X les arrondissements et en Y le nombre de graffitis. fill => utilisé pour la coloration par niveau d'intensité
+      ggplot(data = plotCP, aes(x = `ARRONDISSEMENT`, y = countCP, fill = countCP)) +
+      # Ajouter une barre pour chaque arrondissement
+      geom_bar(stat = "identity") +
+      # Mise en forme du graphe
+      ggtitle("Nb. de graffitis déclarés par arrondissement")  +
+      xlab("Arrondissements") +
+      ylab("Nb. de graffitis") +
+      scale_fill_gradient2(low=LowPlot, mid=MidPlot, 
+      high=HighPlot, midpoint=((max(plotCP$countCP) - min(plotCP$countCP))/2 + min(plotCP$countCP)), name="Niv. intensité", space='Lab') +
+labs(caption = "Ce graphique montre le nombre de graffitis déclarés par arrondissement toutes années confondues. 
+En somme, l'arrondissement le plus touché par les graffitis est le 11ème, suivi de près par le 18ème, puis le 10ème. 
+     A contrario, les moins touchés sont le 7ème, le 8ème et le 16ème.") +
+      theme(plot.caption = element_text(size = 13))
+    } else if(input$data_type == "plotCP2021") {
+        ggplot(data = plotCP2021, aes(x = `ARRONDISSEMENT`, y = countCP21, fill = countCP21)) +
+        geom_bar(stat = "identity") +
+        ggtitle("Nb. de graffitis déclarés par arrondissement")  +
+        xlab("Arrondissements") +
+        ylab("Nb. de graffitis") +
+        scale_fill_gradient2(low=LowPlot, mid=MidPlot, 
+        high=HighPlot, midpoint=((max(plotCP2021$countCP21) - min(plotCP2021$countCP21))/2 + min(plotCP2021$countCP21)), name="Niv. intensité", space='Lab') +
+labs(caption = "Ce graphique montre le nombre de graffitis déclarés par arrondissement en 2021. 
+Les arrondissements les plus touchés sont le 11ème, le 10ème et le 18ème. 
+     On passe de 12 500 pour la valeur maximale en 2020 à 30 000 en 2021.") +
+      theme(plot.caption = element_text(size = 13))
+    } else if(input$data_type == "plotCP2020") {
+        ggplot(data = plotCP2020, aes(x = `ARRONDISSEMENT`, y = countCP20, fill = countCP20)) +
+        geom_bar(stat = "identity") +
+        ggtitle("Nb. de graffitis déclarés par arrondissement")  +
+        xlab("Arrondissements") +
+        ylab("Nb. de graffitis") +
+        scale_fill_gradient2(low=LowPlot, mid=MidPlot, 
+        high=HighPlot, midpoint=((max(plotCP2020$countCP20) - min(plotCP2020$countCP20))/2 + min(plotCP2020$countCP20)), name="Niv. intensité", space='Lab') +
+labs(caption = "Ce graphique montre le nombre de graffitis déclarés par arrondissement en 2020. 
+     On remarque que les arrondissements les plus touchés sont le 18ème, 10ème et le 11ème.
+     On retrouve une representation qui ressemble plus aux résultats des années antèrieures à 2019,
+     avec 2 ou 3 arrondissements qui sortent du lot. 
+     Il est interessant de noter la hausse du nombre de signalisations malgré la crise du coronavirus.") +
+      theme(plot.caption = element_text(size = 13))
+    } else if(input$data_type == "plotCP2019") {
+        ggplot(data = plotCP2019, aes(x = `ARRONDISSEMENT`, y = countCP19, fill = countCP19)) +
+        geom_bar(stat = "identity") +
+        ggtitle("Nb. de graffitis déclarés par arrondissement")  +
+        xlab("Arrondissements") +
+        ylab("Nb. de graffitis") +
+        scale_fill_gradient2(low=LowPlot, mid=MidPlot, 
+        high=HighPlot, midpoint=((max(plotCP2019$countCP19) - min(plotCP2019$countCP19))/2 + min(plotCP2019$countCP19)), name="Niv. intensité", space='Lab') +
+labs(caption = "Ce graphique montre le nombre de graffitis déclarés par arrondissement en 2019. 
+     Les arrondissements les plus touchés sont le 18ème, le 11ème et le 15ème. 
+     Plusieurs arrondissements sont relativement touchés cette année là. 
+     L'année 2019 a été considérée comme l'année du tag.  
+     Pour cause : les différentes marches pour le climat, contre les violences policières, et bien sûr les actions des gilets jaunes. 
+     Tout cela a donné lieu à une meilleure répartition des tags et graffitis. ") +
+      theme(plot.caption = element_text(size = 13))
+    } else if(input$data_type == "plotCP2018") {
+        ggplot(data = plotCP2018, aes(x = `ARRONDISSEMENT`, y = countCP18, fill = countCP18)) +
+        geom_bar(stat = "identity") +
+        ggtitle("Nb. de graffitis déclarés par arrondissement")  +
+        xlab("Arrondissements") +
+        ylab("Nb. de graffitis") +
+        scale_fill_gradient2(low=LowPlot, mid=MidPlot, 
+        high=HighPlot, midpoint=((max(plotCP2018$countCP18) - min(plotCP2018$countCP18))/2 + min(plotCP2018$countCP18)), name="Niv. intensité", space='Lab') +
+labs(caption = "Ce graphique montre le nombre de graffitis déclarés par arrondissement en 2018. 
+     Les arrondissements les plus touchés sont le 18ème et le 11ème. 
+     Le 11ème arrondissement stagne environ à 4000 signalisations, tandis que le 18ème augmente énormement et assez rapidement") +
+      theme(plot.caption = element_text(size = 13))
+    } else if(input$data_type == "plotCP2017") {
+        ggplot(data = plotCP2017, aes(x = `ARRONDISSEMENT`, y = countCP17, fill = countCP17)) +
+        geom_bar(stat = "identity") +
+        ggtitle("Nb. de graffitis déclarés par arrondissement")  +
+        xlab("Arrondissements") +
+        ylab("Nb. de graffitis") +
+        scale_fill_gradient2(low=LowPlot, mid=MidPlot, 
+        high=HighPlot, midpoint=((max(plotCP2017$countCP17) - min(plotCP2017$countCP17))/2 + min(plotCP2017$countCP17)), name="Niv. intensité", space='Lab') +
+labs(caption = "Ce graphique montre le nombre de graffitis déclarés par arrondissement en 2017. 
+     L'arrondissement le plus touché est toujours le 11ème mais on peut voir 
+     une hausse considérable du 18ème par rapport à l'année précédente.") +
+      theme(plot.caption = element_text(size = 13))
+    } else {
+        ggplot(data = plotCP2016, aes(x = `ARRONDISSEMENT`, y = countCP16, fill = countCP16)) +
+        geom_bar(stat = "identity") +
+        ggtitle("Nb. de graffitis déclarés par arrondissement")  +
+        xlab("Arrondissements") +
+        ylab("Nb. de graffitis") + 
+        scale_fill_gradient2(low=LowPlot, mid=MidPlot, 
+        high=HighPlot, midpoint=((max(plotCP2016$countCP16) - min(plotCP2016$countCP16))/2 + min(plotCP2016$countCP16)), name="Niv. intensité", space='Lab') +
+labs(caption = "Ce graphique montre le nombre de graffitis déclarés par arrondissement en 2016. L'arrondissement le plus touché est le 11ème.") +
+      theme(plot.caption = element_text(size = 13))
+    
+      
+      
+      }
+    
+  })
+  
+   
+}
+
+shinyApp(ui, server)
+
+```
